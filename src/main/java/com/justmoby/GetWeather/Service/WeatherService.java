@@ -10,8 +10,14 @@ import java.util.Optional;
 @Service
 public class WeatherService
 {
+    @Value("${data_api_url}")
+    private String ataApiUrl;
+
     public WeatherModel getWeather(String cityName)
     {
+
+
+
         WeatherModel weatherModel = new WeatherModel();
         Optional<WeatherModel> weatherModelOptional = Optional.of(weatherModel);
 
