@@ -26,4 +26,12 @@ public class WeatherController
 
         return new ResponseEntity<>(weatherModel, HttpStatus.OK);
     }
+
+    @ExceptionHandler
+    private ResponseEntity<WeatherErrorResponse> handleException(CityNotFoundException cityNotFoundException)
+    {
+        WeatherErrorResponse weatherErrorResponse = new WeatherErrorResponse(cityNotFoundException.getMessage(), System.currentTimeMillis());
+
+        return new ResponseEntity<>(weatherErrorResponse, HttpStatus.NOT_FOUND);
+    }
 }

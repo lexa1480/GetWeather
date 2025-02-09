@@ -13,7 +13,15 @@ public class WeatherService
     public WeatherModel getWeather(String cityName)
     {
         WeatherModel weatherModel = new WeatherModel();
+        Optional<WeatherModel> weatherModelOptional = Optional.of(weatherModel);
 
-        return  weatherModel;
+        if(weatherModelOptional.isPresent())
+        {
+            return weatherModelOptional.get();
+        }
+        else
+        {
+            throw new CityNotFoundException("City is not found" + cityName);
+        }
     }
 }
