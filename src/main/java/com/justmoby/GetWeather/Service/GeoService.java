@@ -1,7 +1,6 @@
 package com.justmoby.GetWeather.Service;
 
-import com.justmoby.GetWeather.Model.GeoModel;
-import com.justmoby.GetWeather.Utils.CityNotFoundException;
+import com.justmoby.GetWeather.Model.GeoDTO;
 import com.justmoby.GetWeather.Utils.NetworkException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
@@ -11,8 +10,6 @@ import reactor.core.publisher.Mono;
 
 import java.text.MessageFormat;
 import java.util.List;
-
-import org.springframework.http.HttpStatus;
 
 @Service
 public class GeoService
@@ -27,7 +24,7 @@ public class GeoService
     }
 
 
-    public List<GeoModel> getCoordinates(String cityName)
+    public List<GeoDTO> getCoordinates(String cityName)
     {
         System.out.println("GeoService " + cityName);
 
@@ -46,7 +43,7 @@ public class GeoService
 
                             return Mono.error(new NetworkException("Network Exception: " + error.statusCode()));
                         })
-                .bodyToFlux(GeoModel.class)
+                .bodyToFlux(GeoDTO.class)
                 .collectList()
                 .block();
     }

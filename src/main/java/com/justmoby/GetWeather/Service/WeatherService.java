@@ -1,7 +1,7 @@
 package com.justmoby.GetWeather.Service;
 
-import com.justmoby.GetWeather.Model.GeoModel;
-import com.justmoby.GetWeather.Model.WeatherModel;
+import com.justmoby.GetWeather.Model.GeoDTO;
+import com.justmoby.GetWeather.Model.WeatherDTO;
 import com.justmoby.GetWeather.Utils.CityNotFoundException;
 import com.justmoby.GetWeather.Utils.NetworkException;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +12,6 @@ import reactor.core.publisher.Mono;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class WeatherService
@@ -21,7 +20,6 @@ public class WeatherService
     private String weatherApiUrl;
 
     private final WebClient webClient;
-
     private final GeoService geoService;
 
     public WeatherService(WebClient webClient, GeoService geoService)
@@ -30,33 +28,35 @@ public class WeatherService
         this.geoService = geoService;
     }
 
-    public WeatherModel getWeather(String cityName)
+    public WeatherDTO getWeather(String cityName)
     {
         System.out.println("WeatherService " + cityName);
 
-        List<GeoModel> listGeoModel = geoService.getCoordinates(cityName);
-        if(listGeoModel.isEmpty())
+        List<GeoDTO> listGeoDTO = geoService.getCoordinates(cityName);
+        if(listGeoDTO.isEmpty())
         {
             throw new CityNotFoundException("City is not found" + cityName);
         }
 
-        GeoModel geoModel = listGeoModel.getFirst();
-        System.out.println("geoCoordinates " + geoModel.getLatitude() + " / " + geoModel.getLongitude());
+        GeoDTO geoDTO = listGeoDTO.getFirst();
+        System.out.println("geoCoordinates " + geoDTO.getLatitude() + " / " + geoDTO.getLongitude());
 
+        String weatherUrl = MessageFormat.format(weatherApiUrl, geoDTO.getLatitude(), geoDTO.getLongitude());
 
+        System.out.println(weatherUrl);
 
+        return webClient
+            .get()
+            .uri(weatherUrl)
+            .retrieve()
+            .onStatus(HttpStatusCode::isError,
+                    error ->
+                    {
+                        System.out.println("Ошибка сервера 2 ");
 
-
-        WeatherModel weatherModel = new WeatherModel();
-        Optional<WeatherModel> weatherModelOptional = Optional.of(weatherModel);
-
-        if(weatherModelOptional.isPresent())
-        {
-            return weatherModelOptional.get();
-        }
-        else
-        {
-            throw new CityNotFoundException("City is not found" + cityName);
-        }
+                        return Mono.error(new NetworkException("Network Exception: " + error.statusCode()));
+                    })
+            .bodyToMono(WeatherDTO.class)
+            .block();
     }
 }

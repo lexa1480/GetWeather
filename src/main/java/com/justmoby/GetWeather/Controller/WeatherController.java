@@ -1,6 +1,7 @@
 package com.justmoby.GetWeather.Controller;
 
-import com.justmoby.GetWeather.Model.WeatherModel;
+import com.justmoby.GetWeather.Model.TemperatureDTO;
+import com.justmoby.GetWeather.Model.WeatherDTO;
 import com.justmoby.GetWeather.Service.WeatherService;
 import com.justmoby.GetWeather.Utils.CityNotFoundException;
 import com.justmoby.GetWeather.Utils.NetworkException;
@@ -21,13 +22,16 @@ public class WeatherController
     }
 
     @GetMapping("getWeather/{cityName}")
-    public ResponseEntity<WeatherModel> getWeather(@PathVariable("cityName") String cityName)
+    public ResponseEntity<TemperatureDTO> getWeather(@PathVariable("cityName") String cityName)
     {
         System.out.println("WeatherController " + cityName);
 
-        WeatherModel weatherModel = weatherService.getWeather(cityName);
+        WeatherDTO weatherDTO = weatherService.getWeather(cityName);
+        TemperatureDTO temperatureDTO = weatherDTO.getTemperatureDTO();
 
-        return new ResponseEntity<>(weatherModel, HttpStatus.OK);
+        System.out.println(temperatureDTO.getTemperature());
+
+        return new ResponseEntity<>(temperatureDTO, HttpStatus.OK);
     }
 
     @ExceptionHandler
