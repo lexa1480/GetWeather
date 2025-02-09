@@ -3,6 +3,7 @@ package com.justmoby.GetWeather.Controller;
 import com.justmoby.GetWeather.Model.WeatherModel;
 import com.justmoby.GetWeather.Service.WeatherService;
 import com.justmoby.GetWeather.Utils.CityNotFoundException;
+import com.justmoby.GetWeather.Utils.NetworkException;
 import com.justmoby.GetWeather.Utils.WeatherErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,8 @@ public class WeatherController
     @GetMapping("getWeather/{cityName}")
     public ResponseEntity<WeatherModel> getWeather(@PathVariable("cityName") String cityName)
     {
+        System.out.println("WeatherController " + cityName);
+
         WeatherModel weatherModel = weatherService.getWeather(cityName);
 
         return new ResponseEntity<>(weatherModel, HttpStatus.OK);
@@ -30,7 +33,19 @@ public class WeatherController
     @ExceptionHandler
     private ResponseEntity<WeatherErrorResponse> handleException(CityNotFoundException cityNotFoundException)
     {
+        System.out.println("CityNotFoundException ");
+
         WeatherErrorResponse weatherErrorResponse = new WeatherErrorResponse(cityNotFoundException.getMessage(), System.currentTimeMillis());
+
+        return new ResponseEntity<>(weatherErrorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<WeatherErrorResponse> handleException(NetworkException networkException)
+    {
+        System.out.println("NetworkException ");
+
+        WeatherErrorResponse weatherErrorResponse = new WeatherErrorResponse(networkException.getMessage(), System.currentTimeMillis());
 
         return new ResponseEntity<>(weatherErrorResponse, HttpStatus.NOT_FOUND);
     }
