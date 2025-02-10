@@ -2,11 +2,13 @@ package com.justmoby.GetWeather.Service;
 
 import com.justmoby.GetWeather.Model.GeoDTO;
 import com.justmoby.GetWeather.Utils.NetworkException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.web.client.RestClient;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -17,34 +19,26 @@ public class GeoService
     @Value("${geo_api_url}")
     private String geoApiUrl;
 
-    private final WebClient webClient;
+    private final RestClient restClient;
 
-    public GeoService(WebClient webClient) {
-        this.webClient = webClient;
+    public GeoService(RestClient restClient)
+    {
+        this.restClient = restClient;
     }
-
 
     public List<GeoDTO> getCoordinates(String cityName)
     {
-        System.out.println("GeoService " + cityName);
-
         String GeoUrl = MessageFormat.format(geoApiUrl, cityName);
 
-        System.out.println(GeoUrl);
-
-        return webClient
+        return restClient
                 .get()
                 .uri(GeoUrl)
                 .retrieve()
-                .onStatus(HttpStatusCode::isError,
-                        error ->
+                .onStatus(HttpStatusCode::isError
+                        , (request, response) ->
                         {
-                            System.out.println("Ошибка сервера ");
-
-                            return Mono.error(new NetworkException("Network Exception: " + error.statusCode()));
+                            throw new NetworkException("Network Exception: " + response.getStatusCode() + ".\n" +  response.getHeaders());
                         })
-                .bodyToFlux(GeoDTO.class)
-                .collectList()
-                .block();
+                .body(new ParameterizedTypeReference<List<GeoDTO>>() {});
     }
 }

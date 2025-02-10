@@ -4,11 +4,12 @@ import com.justmoby.GetWeather.Model.GeoDTO;
 import com.justmoby.GetWeather.Model.WeatherDTO;
 import com.justmoby.GetWeather.Utils.CityNotFoundException;
 import com.justmoby.GetWeather.Utils.NetworkException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.web.client.RestClient;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -19,44 +20,36 @@ public class WeatherService
     @Value("${data_api_url}")
     private String weatherApiUrl;
 
-    private final WebClient webClient;
+    private final RestClient restClient;
     private final GeoService geoService;
 
-    public WeatherService(WebClient webClient, GeoService geoService)
+    public WeatherService(RestClient restClient, GeoService geoService)
     {
-        this.webClient = webClient;
+        this.restClient = restClient;
         this.geoService = geoService;
     }
 
     public WeatherDTO getWeather(String cityName)
     {
-        System.out.println("WeatherService " + cityName);
-
         List<GeoDTO> listGeoDTO = geoService.getCoordinates(cityName);
         if(listGeoDTO.isEmpty())
         {
-            throw new CityNotFoundException("City is not found" + cityName);
+            throw new CityNotFoundException("City not found: " + cityName);
         }
 
         GeoDTO geoDTO = listGeoDTO.getFirst();
-        System.out.println("geoCoordinates " + geoDTO.getLatitude() + " / " + geoDTO.getLongitude());
 
         String weatherUrl = MessageFormat.format(weatherApiUrl, geoDTO.getLatitude(), geoDTO.getLongitude());
 
-        System.out.println(weatherUrl);
-
-        return webClient
-            .get()
-            .uri(weatherUrl)
-            .retrieve()
-            .onStatus(HttpStatusCode::isError,
-                    error ->
-                    {
-                        System.out.println("Ошибка сервера 2 ");
-
-                        return Mono.error(new NetworkException("Network Exception: " + error.statusCode()));
-                    })
-            .bodyToMono(WeatherDTO.class)
-            .block();
+        return restClient
+                .get()
+                .uri(weatherUrl)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError
+                        , (request, response) ->
+                        {
+                            throw new NetworkException("Network Exception: " + response.getStatusCode() + ".\n" +  response.getHeaders());
+                        })
+                .body(WeatherDTO.class);
     }
 }
