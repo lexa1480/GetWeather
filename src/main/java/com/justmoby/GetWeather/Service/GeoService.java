@@ -19,6 +19,8 @@ public class GeoService
     @Value("${geo_api_url}")
     private String geoApiUrl;
 
+    public static final Logger LOG = LoggerFactory.getLogger(GeoService.class);
+
     private final RestClient restClient;
 
     public GeoService(RestClient restClient)
@@ -26,8 +28,11 @@ public class GeoService
         this.restClient = restClient;
     }
 
+
     public List<GeoDTO> getCoordinates(String cityName)
     {
+        LOG.info("Start getCoordinates()-> {}", cityName);
+
         String GeoUrl = MessageFormat.format(geoApiUrl, cityName);
 
         return restClient
@@ -37,6 +42,8 @@ public class GeoService
                 .onStatus(HttpStatusCode::isError
                         , (request, response) ->
                         {
+                            LOG.error("Network exception from getCoordinates()-> {}", GeoUrl);
+
                             throw new NetworkException("Network Exception: " + response.getStatusCode() + ".\n" +  response.getHeaders());
                         })
                 .body(new ParameterizedTypeReference<List<GeoDTO>>() {});
