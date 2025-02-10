@@ -1,6 +1,5 @@
 package com.justmoby.GetWeather.Utils;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
