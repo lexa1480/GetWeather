@@ -3,6 +3,7 @@ package com.justmoby.GetWeather.Controller;
 import com.justmoby.GetWeather.Utils.CityNotFoundException;
 import com.justmoby.GetWeather.Utils.NetworkException;
 import com.justmoby.GetWeather.Utils.WeatherErrorResponse;
+import com.justmoby.GetWeather.Utils.WeatherNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,6 +16,14 @@ public class ExceptionController
     private ResponseEntity<WeatherErrorResponse> handleException(CityNotFoundException cityNotFoundException)
     {
         WeatherErrorResponse weatherErrorResponse = new WeatherErrorResponse(cityNotFoundException.getMessage(), System.currentTimeMillis());
+
+        return new ResponseEntity<>(weatherErrorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = WeatherNotFoundException.class)
+    private ResponseEntity<WeatherErrorResponse> handleException(WeatherNotFoundException weatherNotFoundException)
+    {
+        WeatherErrorResponse weatherErrorResponse = new WeatherErrorResponse(weatherNotFoundException.getMessage(), System.currentTimeMillis());
 
         return new ResponseEntity<>(weatherErrorResponse, HttpStatus.NOT_FOUND);
     }
