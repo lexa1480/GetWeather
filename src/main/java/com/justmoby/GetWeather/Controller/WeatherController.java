@@ -21,8 +21,7 @@ public class WeatherController
     @GetMapping("getWeather/{cityName}")
     public ResponseEntity<TemperatureDTO> getWeather(@PathVariable("cityName") String cityName)
     {
-        WeatherDTO weatherDTO = weatherService.getWeather(cityName);
-        TemperatureDTO temperatureDTO = weatherDTO.getTemperatureDTO();
+        TemperatureDTO temperatureDTO = weatherService.getTemperature(cityName);
 
         return new ResponseEntity<>(temperatureDTO, HttpStatus.OK);
     }

@@ -1,9 +1,11 @@
 package com.justmoby.GetWeather.Service;
 
 import com.justmoby.GetWeather.Model.GeoDTO;
+import com.justmoby.GetWeather.Model.TemperatureDTO;
 import com.justmoby.GetWeather.Model.WeatherDTO;
 import com.justmoby.GetWeather.Utils.CityNotFoundException;
 import com.justmoby.GetWeather.Utils.NetworkException;
+import com.justmoby.GetWeather.Utils.WeatherNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +15,7 @@ import org.springframework.web.client.RestClient;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WeatherService
@@ -31,6 +34,23 @@ public class WeatherService
         this.geoService = geoService;
     }
 
+    public TemperatureDTO getTemperature(String cityName)
+    {
+        WeatherDTO weatherDTO = getWeather(cityName);
+
+        if(weatherDTO == null)
+        {
+            LOG.error("Resulting weather is empty");
+
+            throw new WeatherNotFoundException("Weather not found city: " + cityName);
+        }
+
+        TemperatureDTO temperatureDTO = weatherDTO.getTemperatureDTO();
+        LOG.info("Received Temperature,TemperatureMin,TemperatureMax -> {},{},{}", temperatureDTO.getTemperature(), temperatureDTO.getTemperatureMin(), temperatureDTO.getTemperatureMax());
+
+        return temperatureDTO;
+    }
+
     public WeatherDTO getWeather(String cityName)
     {
         LOG.info("Start getWeather()-> {}", cityName);
@@ -40,14 +60,14 @@ public class WeatherService
         {
             LOG.error("Resulting list of coordinates is empty");
 
-            throw new CityNotFoundException("City not found: " + cityName);
+            throw new CityNotFoundException("City not found city: " + cityName);
         }
 
         GeoDTO geoDTO = listGeoDTO.getFirst();
         LOG.info("Received Latitude,Longitude-> {},{}", geoDTO.getLatitude(), geoDTO.getLongitude());
 
-        String weatherUrl = MessageFormat.format(weatherApiUrl, geoDTO.getLatitude(), geoDTO.getLongitude());
 
+        String weatherUrl = MessageFormat.format(weatherApiUrl, geoDTO.getLatitude(), geoDTO.getLongitude());
         return restClient
                 .get()
                 .uri(weatherUrl)
@@ -57,7 +77,7 @@ public class WeatherService
                         {
                             LOG.error("Network exception from getWeather()-> {}", weatherUrl);
 
-                            throw new NetworkException("Network Exception: " + response.getStatusCode() + ".\n" +  response.getHeaders());
+                            throw new NetworkException("Network Exception: " + response.getStatusCode() + ".\n" + response.getHeaders());
                         })
                 .body(WeatherDTO.class);
     }
