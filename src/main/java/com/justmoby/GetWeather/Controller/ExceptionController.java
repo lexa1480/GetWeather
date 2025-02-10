@@ -14,8 +14,6 @@ public class ExceptionController
     @ExceptionHandler(value = CityNotFoundException.class)
     private ResponseEntity<WeatherErrorResponse> handleException(CityNotFoundException cityNotFoundException)
     {
-        System.out.println("CityNotFoundException ");
-
         WeatherErrorResponse weatherErrorResponse = new WeatherErrorResponse(cityNotFoundException.getMessage(), System.currentTimeMillis());
 
         return new ResponseEntity<>(weatherErrorResponse, HttpStatus.NOT_FOUND);
@@ -24,8 +22,6 @@ public class ExceptionController
     @ExceptionHandler(value = NetworkException.class)
     private ResponseEntity<WeatherErrorResponse> handleException(NetworkException networkException)
     {
-        System.out.println("NetworkException ");
-
         WeatherErrorResponse weatherErrorResponse = new WeatherErrorResponse(networkException.getMessage(), System.currentTimeMillis());
 
         return new ResponseEntity<>(weatherErrorResponse, HttpStatus.BAD_REQUEST);
