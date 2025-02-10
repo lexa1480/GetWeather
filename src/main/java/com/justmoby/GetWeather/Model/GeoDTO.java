@@ -16,12 +16,8 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GeoDTO
 {
-    private String name;
-    private Map<String, String> local_names;
     @JsonProperty("lat")
     private double latitude;
     @JsonProperty("lon")
     private double longitude;
-    private String country;
-    private String state;
 }
