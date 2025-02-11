@@ -4,7 +4,7 @@ import com.justmoby.GetWeather.Model.GeoDTO;
 import com.justmoby.GetWeather.Model.TemperatureDTO;
 import com.justmoby.GetWeather.Model.WeatherDTO;
 import com.justmoby.GetWeather.Utils.CityNotFoundException;
-import com.justmoby.GetWeather.Utils.NetworkException;
+import com.justmoby.GetWeather.Utils.HttpClientServerErrorException;
 import com.justmoby.GetWeather.Utils.WeatherNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,6 @@ import org.springframework.web.client.RestClient;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class WeatherService
@@ -77,7 +76,7 @@ public class WeatherService
                         {
                             LOG.error("Network exception from getWeather()-> {}", weatherUrl);
 
-                            throw new NetworkException("Network Exception: " + response.getStatusCode() + ".\n" + response.getHeaders());
+                            throw new HttpClientServerErrorException("Network Exception: " + response.getStatusCode() + ".\n" + response.getHeaders());
                         })
                 .body(WeatherDTO.class);
     }

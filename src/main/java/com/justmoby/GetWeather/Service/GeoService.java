@@ -1,7 +1,7 @@
 package com.justmoby.GetWeather.Service;
 
 import com.justmoby.GetWeather.Model.GeoDTO;
-import com.justmoby.GetWeather.Utils.NetworkException;
+import com.justmoby.GetWeather.Utils.HttpClientServerErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,8 +44,23 @@ public class GeoService
                         {
                             LOG.error("Network exception from getCoordinates()-> {}", GeoUrl);
 
-                            throw new NetworkException("Network Exception: " + response.getStatusCode() + ".\n" +  response.getHeaders());
+                            throw new HttpClientServerErrorException("Network Exception: " + response.getStatusCode() + ".\n" + response.getHeaders());
                         })
-                .body(new ParameterizedTypeReference<List<GeoDTO>>() {});
+                .body(new ParameterizedTypeReference<List<GeoDTO>>()
+                {
+                });
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
