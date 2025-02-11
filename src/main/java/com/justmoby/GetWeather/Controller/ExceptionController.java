@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionController
 {
-    public static final Logger LOG = LoggerFactory.getLogger(ExceptionController.class);
-
-
     @ExceptionHandler(value = CityNotFoundException.class)
     private ResponseEntity<WeatherErrorResponse> handleException(CityNotFoundException cityNotFoundException)
     {

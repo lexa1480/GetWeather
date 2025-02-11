@@ -46,8 +46,7 @@ public class GeoService
 
                             throw new HttpClientServerErrorException("Network Exception: " + response.getStatusCode() + ".\n" + response.getHeaders());
                         })
-                .body(new ParameterizedTypeReference<List<GeoDTO>>()
-                {
+                .body(new ParameterizedTypeReference<>() {
                 });
     }
 }
