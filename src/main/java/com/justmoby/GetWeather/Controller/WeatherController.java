@@ -1,7 +1,6 @@
 package com.justmoby.GetWeather.Controller;
 
 import com.justmoby.GetWeather.Model.TemperatureDTO;
-import com.justmoby.GetWeather.Model.WeatherDTO;
 import com.justmoby.GetWeather.Service.WeatherService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
