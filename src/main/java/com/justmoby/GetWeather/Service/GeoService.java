@@ -46,7 +46,8 @@ public class GeoService
 
                             throw new HttpClientServerErrorException("HttpClientServer Exception: " + response.getStatusCode() + ".\n" + response.getHeaders());
                         })
-                .body(new ParameterizedTypeReference<>() {
+                .body(new ParameterizedTypeReference<>()
+                {
                 });
     }
 }
