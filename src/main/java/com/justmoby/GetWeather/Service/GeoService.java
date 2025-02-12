@@ -17,7 +17,7 @@ import java.util.List;
 public class GeoService
 {
     @Value("${geo_api_url}")
-    private String geoApiUrl;
+    public String geoApiUrl;
 
     public static final Logger LOG = LoggerFactory.getLogger(GeoService.class);
 
@@ -42,9 +42,9 @@ public class GeoService
                 .onStatus(HttpStatusCode::isError
                         , (request, response) ->
                         {
-                            LOG.error("Network exception from getCoordinates()-> {}", GeoUrl);
+                            LOG.error("HttpClientServer exception from getCoordinates()-> {}", GeoUrl);
 
-                            throw new HttpClientServerErrorException("Network Exception: " + response.getStatusCode() + ".\n" + response.getHeaders());
+                            throw new HttpClientServerErrorException("HttpClientServer Exception: " + response.getStatusCode() + ".\n" + response.getHeaders());
                         })
                 .body(new ParameterizedTypeReference<>() {
                 });

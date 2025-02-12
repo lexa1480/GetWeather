@@ -74,9 +74,9 @@ public class WeatherService
                 .onStatus(HttpStatusCode::isError
                         , (request, response) ->
                         {
-                            LOG.error("Network exception from getWeather()-> {}", weatherUrl);
+                            LOG.error("HttpClientServer exception from getWeather()-> {}", weatherUrl);
 
-                            throw new HttpClientServerErrorException("Network Exception: " + response.getStatusCode() + ".\n" + response.getHeaders());
+                            throw new HttpClientServerErrorException("HttpClientServer Exception: " + response.getStatusCode() + ".\n" + response.getHeaders());
                         })
                 .body(WeatherDTO.class);
     }
