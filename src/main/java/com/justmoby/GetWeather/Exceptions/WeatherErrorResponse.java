@@ -1,4 +1,4 @@
-package com.justmoby.GetWeather.Utils;
+package com.justmoby.GetWeather.Exceptions;
 
 import lombok.Getter;
 import lombok.Setter;

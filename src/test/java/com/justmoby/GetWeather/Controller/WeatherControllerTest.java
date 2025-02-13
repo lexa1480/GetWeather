@@ -2,9 +2,9 @@ package com.justmoby.GetWeather.Controller;
 
 import com.justmoby.GetWeather.Model.TemperatureDTO;
 import com.justmoby.GetWeather.Service.WeatherService;
-import com.justmoby.GetWeather.Utils.CityNotFoundException;
-import com.justmoby.GetWeather.Utils.HttpClientServerErrorException;
-import com.justmoby.GetWeather.Utils.WeatherNotFoundException;
+import com.justmoby.GetWeather.Exceptions.CityNotFoundException;
+import com.justmoby.GetWeather.Exceptions.HttpClientServerErrorException;
+import com.justmoby.GetWeather.Exceptions.WeatherNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

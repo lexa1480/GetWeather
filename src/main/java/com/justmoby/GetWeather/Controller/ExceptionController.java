@@ -1,6 +1,9 @@
 package com.justmoby.GetWeather.Controller;
 
-import com.justmoby.GetWeather.Utils.*;
+import com.justmoby.GetWeather.Exceptions.CityNotFoundException;
+import com.justmoby.GetWeather.Exceptions.HttpClientServerErrorException;
+import com.justmoby.GetWeather.Exceptions.WeatherErrorResponse;
+import com.justmoby.GetWeather.Exceptions.WeatherNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

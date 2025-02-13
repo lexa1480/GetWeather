@@ -1,7 +1,7 @@
 package com.justmoby.GetWeather.Service;
 
 import com.justmoby.GetWeather.Model.GeoDTO;
-import com.justmoby.GetWeather.Utils.HttpClientServerErrorException;
+import com.justmoby.GetWeather.Exceptions.HttpClientServerErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

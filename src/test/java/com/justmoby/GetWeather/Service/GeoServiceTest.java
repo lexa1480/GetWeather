@@ -2,7 +2,7 @@ package com.justmoby.GetWeather.Service;
 
 
 import com.justmoby.GetWeather.Model.GeoDTO;
-import com.justmoby.GetWeather.Utils.HttpClientServerErrorException;
+import com.justmoby.GetWeather.Exceptions.HttpClientServerErrorException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
