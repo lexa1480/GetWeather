@@ -29,7 +29,7 @@ public class GeoServiceTest {
     private GeoService geoService;
 
     @Test
-    void getCoordinates_success()
+    void getCoordinates_Success()
     {
         String cityName = "testCity";
         String GeoUrl   = "https://testUrl";

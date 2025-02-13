@@ -36,7 +36,7 @@ public class WeatherServiceTest {
 
 
     @Test
-    void getTemperature_success()
+    void getTemperature_Success()
     {
         String cityName   = "testCity";
         String WeatherUrl = "https://testUrl";
@@ -98,7 +98,7 @@ public class WeatherServiceTest {
     }
 
     @Test
-    void getWeather_success()
+    void getWeather_Success()
     {
         String cityName   = "testCity";
         String WeatherUrl = "https://testUrl";
